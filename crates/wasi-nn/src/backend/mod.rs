@@ -2,6 +2,8 @@
 //! this crate. The `Box<dyn ...>` types returned by these interfaces allow
 //! implementations to maintain backend-specific state between calls.
 
+#[cfg(feature = "llama_cpp")]
+pub mod llama_cpp;
 #[cfg(feature = "onnx")]
 pub mod onnxruntime;
 #[cfg(feature = "openvino")]
@@ -11,10 +13,14 @@ pub mod winml;
 
 #[cfg(feature = "onnx")]
 use self::onnxruntime::OnnxBackend;
+
 #[cfg(feature = "openvino")]
 use self::openvino::OpenvinoBackend;
 #[cfg(all(feature = "winml", target_os = "windows"))]
 use self::winml::WinMLBackend;
+
+#[cfg(feature = "llama_cpp")]
+use self::llama_cpp::LlamaCppBackend;
 
 use crate::wit::types::{ExecutionTarget, GraphEncoding, Tensor};
 use crate::{Backend, ExecutionContext, Graph};
@@ -38,6 +44,10 @@ pub fn list() -> Vec<Backend> {
     #[cfg(feature = "onnx")]
     {
         backends.push(Backend::from(OnnxBackend::default()));
+    }
+    #[cfg(feature = "llama_cpp")]
+    {
+        backends.push(Backend::from(LlamaCppBackend::default()));
     }
     backends
 }

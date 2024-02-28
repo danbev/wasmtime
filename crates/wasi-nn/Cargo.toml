@@ -31,6 +31,12 @@ openvino = { version = "0.6.0", features = [
 
 ort = { version = "2.0.0-rc.0", default-features = false, features = ["copy-dylibs", "download-binaries"], optional = true }
 
+llm-chain = { git ="https://github.com/danbev/llm-chain.git", branch="wasmtime-backend-updates", optional = true }
+llm-chain-llama = { git ="https://github.com/danbev/llm-chain.git", branch="wasmtime-backend-updates",optional = true }
+serde_json = { version = "1.0.64", optional = true }
+tokio = { version = "1.28.0", features = ["rt-multi-thread"], optional = true }
+backtrace = { version = "0.3", optional = true }
+
 [target.'cfg(windows)'.dependencies.windows]
 version = "0.52"
 features = [
@@ -39,6 +45,7 @@ features = [
     "Foundation_Collections",
 ]
 optional = true
+
 
 [build-dependencies]
 walkdir = { workspace = true }
@@ -57,3 +64,4 @@ openvino = ["dep:openvino"]
 onnx = ["dep:ort"]
 # winml is only available on Windows 10 1809 and later.
 winml = ["dep:windows"]
+llama_cpp = ["llm-chain-llama", "llm-chain", "serde_json", "tokio", "backtrace"]
